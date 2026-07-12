@@ -1,0 +1,6 @@
+dist
+.next
+coverage
+pnpm-lock.yaml
+*.md
+docs/**/*.html

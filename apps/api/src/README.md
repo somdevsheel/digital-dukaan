@@ -1,0 +1,1 @@
+Implementation begins Phase 7 — see the module layout in [../README.md](../README.md) and [Architecture §5](../../../docs/02-architecture/ARCHITECTURE.md#5-clean-architecture-inside-the-api-service) before adding code here.

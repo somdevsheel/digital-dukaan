@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+storybook-static/
+*.tsbuildinfo
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Native
+.expo/
+*.ipa
+*.apk
+apps/mobile-*/app.config.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+
+# Test / coverage
+coverage/
+
+# Turbo
+.turbo/
+
+# Prisma
+apps/api/prisma/migrations/dev/
+
+# Local infra volumes
+.docker-data/

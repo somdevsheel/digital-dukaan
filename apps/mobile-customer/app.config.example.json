@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Marketplace — Customer",
+    "slug": "marketplace-customer",
+    "scheme": "marketplace-customer",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "extra": {
+      "apiUrl": "http://localhost:4000/api/v1",
+      "realtimeUrl": "http://localhost:4001",
+      "googleMapsApiKey": ""
+    }
+  }
+}

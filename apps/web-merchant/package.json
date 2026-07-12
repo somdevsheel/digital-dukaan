@@ -1,0 +1,42 @@
+{
+  "name": "@app/web-merchant",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Merchant dashboard — store setup, catalog, orders, coupons, staff, analytics.",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@tanstack/react-query": "^5.62.0",
+    "react-hook-form": "^7.54.0",
+    "@hookform/resolvers": "^3.9.0",
+    "zod": "^3.24.0",
+    "tailwindcss": "^3.4.0",
+    "class-variance-authority": "^0.7.1",
+    "tailwind-merge": "^2.5.0",
+    "lucide-react": "^0.469.0",
+    "@platform/ui": "workspace:*",
+    "@platform/api-client": "workspace:*",
+    "@platform/validation-schemas": "workspace:*",
+    "@platform/domain-types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/node": "^22.10.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss-animate": "^1.0.7",
+    "jest": "^29.7.0",
+    "@platform/config": "workspace:*"
+  }
+}

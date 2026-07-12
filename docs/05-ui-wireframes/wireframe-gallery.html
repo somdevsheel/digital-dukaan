@@ -1,0 +1,1015 @@
+<title>Wireframe Plates — Hyperlocal Marketplace</title>
+<style>
+  :root{
+    --paper:#F5F4F1; --paper-raised:#FFFFFF; --ink:#1B1C20; --ink-soft:#5B5D66;
+    --line:#C7C7CC; --line-soft:#E4E4E7; --grid:rgba(27,28,32,.05);
+    --accent:#2F4B9A; --accent-soft:#E4E9F7; --accent-contrast:#FFFFFF;
+    --future:#8A8D96; --future-soft:#EEEEEF;
+    --radius-device:22px; --radius-ui:3px;
+    --font-display:"Iowan Old Style","Palatino Linotype","URW Palladio L",Georgia,serif;
+    --font-mono:ui-monospace,"Cascadia Code","Roboto Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#1B1C20; --paper-raised:#232429; --ink:#EDEDEF; --ink-soft:#A7A9B2;
+      --line:#3C3E46; --line-soft:#2A2C32; --grid:rgba(255,255,255,.05);
+      --accent:#8CA1E8; --accent-soft:#2A3252; --accent-contrast:#12141A;
+      --future:#8A8D96; --future-soft:#2A2B30;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1B1C20; --paper-raised:#232429; --ink:#EDEDEF; --ink-soft:#A7A9B2;
+    --line:#3C3E46; --line-soft:#2A2C32; --grid:rgba(255,255,255,.05);
+    --accent:#8CA1E8; --accent-soft:#2A3252; --accent-contrast:#12141A;
+    --future:#8A8D96; --future-soft:#2A2B30;
+  }
+  :root[data-theme="light"]{
+    --paper:#F5F4F1; --paper-raised:#FFFFFF; --ink:#1B1C20; --ink-soft:#5B5D66;
+    --line:#C7C7CC; --line-soft:#E4E4E7; --grid:rgba(27,28,32,.05);
+    --accent:#2F4B9A; --accent-soft:#E4E9F7; --accent-contrast:#FFFFFF;
+    --future:#8A8D96; --future-soft:#EEEEEF;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  a{color:var(--accent);}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  .shell{display:flex; min-height:100vh; max-width:1400px; margin:0 auto;}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:252px; flex-shrink:0; padding:28px 18px; position:sticky; top:0; height:100vh;
+    overflow-y:auto; border-right:1px solid var(--line-soft);
+  }
+  .brand{font-family:var(--font-display); font-size:17px; margin:0 0 2px;}
+  .brand-sub{font-family:var(--font-mono); font-size:10px; color:var(--ink-soft); letter-spacing:.04em; text-transform:uppercase;}
+  .plate-count{font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); margin:18px 0 10px; padding-top:16px; border-top:1px solid var(--line-soft);}
+  .navgroup{margin-bottom:14px;}
+  .navgroup h4{font-family:var(--font-mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 6px; font-weight:600;}
+  .navgroup ol{list-style:none; margin:0; padding:0;}
+  .navgroup li{margin:0;}
+  .navgroup a{
+    display:flex; gap:8px; align-items:baseline; text-decoration:none; color:var(--ink);
+    font-size:12.5px; padding:5px 6px; border-radius:2px;
+  }
+  .navgroup a:hover{background:var(--line-soft);}
+  .navgroup a.current{background:var(--accent-soft); color:var(--accent);}
+  .navgroup a span.n{font-family:var(--font-mono); font-size:10px; color:var(--ink-soft); width:16px; flex-shrink:0;}
+  .navgroup a.current span.n{color:var(--accent);}
+
+  /* ---------- Main ---------- */
+  .content{flex:1; min-width:0; padding:40px 48px 100px;}
+  .intro{max-width:640px; margin-bottom:8px;}
+  .intro h1{font-family:var(--font-display); font-size:32px; margin:0 0 10px; text-wrap:balance;}
+  .intro p{color:var(--ink-soft); font-size:14.5px; margin:0 0 10px;}
+  .fidelity-note{
+    display:flex; gap:10px; align-items:flex-start; background:var(--paper-raised);
+    border:1px solid var(--line-soft); border-left:3px solid var(--accent);
+    padding:12px 14px; border-radius:2px; font-size:13px; color:var(--ink-soft); margin:20px 0 8px;
+  }
+  .fidelity-note b{color:var(--ink); font-weight:600;}
+
+  /* legend */
+  .legend{display:flex; flex-wrap:wrap; gap:18px; margin:26px 0 44px; padding:16px 18px; background:var(--paper-raised); border:1px solid var(--line-soft); border-radius:4px;}
+  .legend-item{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-soft);}
+  .legend-swatch{width:26px; height:16px; flex-shrink:0; border-radius:2px;}
+
+  .app-section{margin-bottom:56px; scroll-margin-top:24px;}
+  .app-section > .app-head{display:flex; align-items:baseline; gap:12px; margin-bottom:22px; padding-bottom:10px; border-bottom:1.5px solid var(--ink);}
+  .app-head h2{font-family:var(--font-display); font-size:22px; margin:0;}
+  .app-head .platform{font-family:var(--font-mono); font-size:10.5px; color:var(--ink-soft); letter-spacing:.03em;}
+
+  .plate{
+    background:var(--paper-raised); border:1px solid var(--line-soft); border-radius:6px;
+    margin-bottom:28px; scroll-margin-top:24px; overflow:hidden;
+  }
+  .plate-head{
+    display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--line-soft);
+    flex-wrap:wrap;
+  }
+  .plate-num{font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); flex-shrink:0;}
+  .plate-head h3{font-size:15px; margin:0; font-weight:600; flex-shrink:0;}
+  .plate-api{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--accent); background:var(--accent-soft);
+    padding:3px 8px; border-radius:2px; margin-left:auto;
+  }
+  .plate-body{display:flex; gap:26px; padding:22px; flex-wrap:wrap;}
+  .plate-body.web{flex-direction:column;}
+
+  .device{position:relative; background:var(--paper-raised); border:1.5px solid var(--line); flex-shrink:0;}
+  .device--native{width:290px; border-radius:var(--radius-device); overflow:hidden;}
+  .device--web{width:100%; border-radius:6px; overflow:hidden;}
+  .statusbar{height:22px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; font-family:var(--font-mono); font-size:9.5px; color:var(--ink-soft); background:var(--paper);}
+  .browserbar{height:28px; display:flex; align-items:center; gap:6px; padding:0 10px; background:var(--paper); border-bottom:1px solid var(--line-soft);}
+  .browserbar .dot{width:7px; height:7px; border-radius:50%; background:var(--line);}
+  .browserbar .addr{flex:1; margin-left:6px; height:15px; border:1px solid var(--line-soft); border-radius:3px; background:var(--paper-raised);}
+
+  .screen{
+    padding:14px; display:flex; flex-direction:column; gap:10px;
+    background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:100% 16px, 16px 100%;
+  }
+  .screen.dense{gap:14px; padding:18px;}
+
+  .wf-bar{height:8px; border-radius:2px; background:var(--line-soft); flex-shrink:0;}
+  .wf-box{border:1.3px solid var(--line); border-radius:var(--radius-ui); background:var(--paper-raised);}
+  .wf-img{
+    border:1.3px dashed var(--line); border-radius:var(--radius-ui);
+    background-image:repeating-linear-gradient(135deg, var(--line-soft) 0 1px, transparent 1px 9px);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-soft);
+    font-family:var(--font-mono); font-size:9px; letter-spacing:.04em; flex-shrink:0;
+  }
+  .wf-btn{
+    border:1.3px solid var(--ink); border-radius:var(--radius-ui); display:flex; align-items:center;
+    justify-content:center; font-family:var(--font-mono); font-size:10px; letter-spacing:.02em;
+    padding:9px; background:var(--paper-raised); color:var(--ink);
+  }
+  .wf-btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-contrast);}
+  .wf-btn.ghost{border-style:dashed;}
+  .wf-chip{
+    border:1.3px solid var(--line); border-radius:999px; padding:4px 10px; font-family:var(--font-mono);
+    font-size:9px; color:var(--ink-soft); white-space:nowrap; flex-shrink:0;
+  }
+  .wf-chip.active{border-color:var(--accent); color:var(--accent); background:var(--accent-soft);}
+  .wf-tag{font-family:var(--font-mono); font-size:9px; padding:2px 7px; border-radius:2px; flex-shrink:0;}
+  .wf-tag.mvp{color:var(--accent); background:var(--accent-soft);}
+  .wf-tag.future{color:var(--future); background:var(--future-soft);}
+  .wf-tag.ink{color:var(--ink); border:1px solid var(--line);}
+  .row{display:flex; gap:8px; align-items:center;}
+  .col{display:flex; flex-direction:column; gap:6px;}
+  .grow{flex:1; min-width:0;}
+  .wf-circle{border-radius:50%; border:1.3px solid var(--line); background:var(--paper-raised); flex-shrink:0;}
+
+  .el{position:relative; display:inline-flex;}
+  .el.block{display:flex;}
+  .badge{
+    position:absolute; top:-7px; right:-7px; width:16px; height:16px; border-radius:50%;
+    background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:9px;
+    display:flex; align-items:center; justify-content:center; line-height:1; z-index:2;
+  }
+
+  .stepper{display:flex; align-items:center; padding:2px 4px;}
+  .stepper .node{width:11px; height:11px; border-radius:50%; background:var(--line-soft); border:1.3px solid var(--line); flex-shrink:0;}
+  .stepper .node.active{background:var(--accent); border-color:var(--accent);}
+  .stepper .node.done{background:var(--ink-soft); border-color:var(--ink-soft);}
+  .stepper .seg{flex:1; height:2px; background:var(--line-soft); margin:0 -1px;}
+  .stepper .seg.done{background:var(--ink-soft);}
+  .stepper-labels{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:8px; color:var(--ink-soft); padding:0 2px;}
+
+  .chart{display:flex; align-items:flex-end; gap:5px; height:70px;}
+  .chart .bar{flex:1; background:var(--accent-soft); border-top:2px solid var(--accent); border-radius:1px 1px 0 0;}
+
+  table.wf-table{width:100%; border-collapse:collapse; font-size:11.5px;}
+  table.wf-table th{
+    text-align:left; font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase;
+    letter-spacing:.03em; color:var(--ink-soft); font-weight:600; padding:7px 10px; border-bottom:1.3px solid var(--line);
+  }
+  table.wf-table td{padding:9px 10px; border-bottom:1px solid var(--line-soft); vertical-align:middle;}
+
+  .annotations{margin:0; padding:0; list-style:none; min-width:220px; max-width:280px;}
+  .annotations li{
+    display:flex; gap:10px; font-size:12.5px; color:var(--ink-soft); margin-bottom:12px; align-items:flex-start;
+  }
+  .annotations b{
+    flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--ink); color:var(--paper);
+    font-family:var(--font-mono); font-size:10px; display:flex; align-items:center; justify-content:center;
+    font-weight:400;
+  }
+  .annotations li span{padding-top:1px;}
+  .annotations li em{font-style:normal; color:var(--ink);}
+
+  footer.doc-footer{
+    margin-top:60px; padding-top:20px; border-top:1px solid var(--line-soft);
+    font-family:var(--font-mono); font-size:11px; color:var(--ink-soft);
+  }
+
+  @media (max-width:900px){
+    .shell{flex-direction:column;}
+    .sidebar{
+      width:100%; height:auto; position:sticky; top:0; z-index:5; padding:14px 16px;
+      display:flex; align-items:center; gap:16px; overflow-x:auto; background:var(--paper);
+      border-right:none; border-bottom:1px solid var(--line-soft);
+    }
+    .brand, .brand-sub, .plate-count{display:none;}
+    .navgroup{margin-bottom:0; flex-shrink:0;}
+    .navgroup ol{display:flex; gap:4px;}
+    .navgroup h4{white-space:nowrap;}
+    .content{padding:28px 20px 80px;}
+    .plate-body{flex-direction:column;}
+    .device--native{width:100%; max-width:290px; margin:0 auto;}
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    html{scroll-behavior:smooth;}
+  }
+</style>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Screen index">
+    <p class="brand">Wireframe Plates</p>
+    <p class="brand-sub">Hyperlocal Marketplace · Phase 5</p>
+    <p class="plate-count">17 plates · 4 apps</p>
+
+    <div class="navgroup">
+      <h4>Customer App</h4>
+      <ol>
+        <li><a href="#s01"><span class="n">01</span>Home / Discovery</a></li>
+        <li><a href="#s02"><span class="n">02</span>Search Results</a></li>
+        <li><a href="#s03"><span class="n">03</span>Business Profile</a></li>
+        <li><a href="#s04"><span class="n">04</span>Product Detail</a></li>
+        <li><a href="#s05"><span class="n">05</span>Cart &amp; Checkout</a></li>
+        <li><a href="#s06"><span class="n">06</span>Order Tracking</a></li>
+        <li><a href="#s07"><span class="n">07</span>Service Enquiry</a></li>
+      </ol>
+    </div>
+    <div class="navgroup">
+      <h4>Merchant Dashboard</h4>
+      <ol>
+        <li><a href="#s08"><span class="n">08</span>Store Setup</a></li>
+        <li><a href="#s09"><span class="n">09</span>Catalog Mgmt</a></li>
+        <li><a href="#s10"><span class="n">10</span>Order Queue</a></li>
+        <li><a href="#s11"><span class="n">11</span>Sales Dashboard</a></li>
+      </ol>
+    </div>
+    <div class="navgroup">
+      <h4>Admin Panel</h4>
+      <ol>
+        <li><a href="#s12"><span class="n">12</span>Verification Queue</a></li>
+        <li><a href="#s13"><span class="n">13</span>Business Mgmt</a></li>
+        <li><a href="#s14"><span class="n">14</span>Overview Dashboard</a></li>
+      </ol>
+    </div>
+    <div class="navgroup">
+      <h4>Delivery Partner</h4>
+      <ol>
+        <li><a href="#s15"><span class="n">15</span>Order Offer</a></li>
+        <li><a href="#s16"><span class="n">16</span>Active Delivery</a></li>
+        <li><a href="#s17"><span class="n">17</span>Earnings &amp; Wallet</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="intro">
+      <h1>UI Wireframes — Phase 5</h1>
+      <p>17 low-fidelity plates spanning the Customer app, Merchant dashboard, Admin panel, and Delivery Partner app. Each plate maps to a real endpoint from the <a href="../04-api-design/API_DESIGN.md">API Design</a> doc.</p>
+    </div>
+    <div class="fidelity-note">
+      <span>—</span>
+      <p style="margin:0;"><b>Grayscale, boxes, no branding — on purpose.</b> Visual design (color, type, motion) is a Phase 8 exercise built on top of these validated layouts. Locking that in before the information hierarchy is agreed tends to produce expensive rework later.</p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch wf-img" style="height:16px;"></span> Image / media placeholder</div>
+      <div class="legend-item"><span class="legend-swatch wf-btn primary" style="height:16px;"></span> Primary action</div>
+      <div class="legend-item"><span class="legend-swatch wf-btn" style="height:16px;"></span> Secondary action</div>
+      <div class="legend-item"><span class="legend-swatch wf-tag mvp" style="display:flex;align-items:center;justify-content:center;">MVP</span> Model A — full depth</div>
+      <div class="legend-item"><span class="legend-swatch wf-tag future" style="display:flex;align-items:center;justify-content:center;">V1.1</span> Deferred per PRD §6</div>
+      <div class="legend-item"><b style="width:16px;height:16px;border-radius:50%;background:var(--ink);color:var(--paper);font-family:var(--font-mono);font-size:9px;display:flex;align-items:center;justify-content:center;">1</b> Annotation reference</div>
+    </div>
+
+    <!-- =================== CUSTOMER APP =================== -->
+    <section class="app-section" id="customer">
+      <div class="app-head"><h2>Customer App</h2><span class="platform">React Native · native mobile</span></div>
+
+      <!-- 01 Home -->
+      <article class="plate" id="s01">
+        <div class="plate-head"><span class="plate-num">01 / 17</span><h3>Home / Discovery</h3><span class="plate-api">GET /businesses</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="el block row" style="width:100%;">
+                <div class="badge" style="position:static; margin-right:2px;">1</div>
+                <div class="wf-bar" style="width:16px;height:16px;border-radius:50%;"></div>
+                <div class="wf-bar" style="width:55%;"></div>
+                <div class="wf-bar" style="width:8px;margin-left:auto;"></div>
+              </div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="wf-box row" style="width:100%;padding:9px 12px;">
+                  <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">Search shops, products, categories…</span>
+                </div>
+              </div>
+              <div class="el block">
+                <div class="badge">3</div>
+                <div class="row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;">
+                  <div class="col" style="align-items:center;"><div class="wf-box" style="width:44px;height:44px;border-radius:10px;"></div><div class="wf-bar" style="width:32px;height:6px;"></div></div>
+                  <div class="col" style="align-items:center;"><div class="wf-box" style="width:44px;height:44px;border-radius:10px;"></div><div class="wf-bar" style="width:32px;height:6px;"></div></div>
+                  <div class="col" style="align-items:center;"><div class="wf-box" style="width:44px;height:44px;border-radius:10px;"></div><div class="wf-bar" style="width:32px;height:6px;"></div></div>
+                  <div class="col" style="align-items:center;"><div class="wf-box" style="width:44px;height:44px;border-radius:10px;"></div><div class="wf-bar" style="width:32px;height:6px;"></div></div>
+                </div>
+              </div>
+              <div class="wf-bar" style="width:40%;margin-top:4px;"></div>
+              <div class="row" style="overflow:hidden;">
+                <div class="wf-box col" style="width:120px;flex-shrink:0;padding:6px;">
+                  <div class="wf-img" style="height:64px;">IMG</div>
+                  <div class="wf-bar" style="width:80%;"></div>
+                  <div class="wf-bar" style="width:50%;height:6px;"></div>
+                </div>
+                <div class="wf-box col" style="width:120px;flex-shrink:0;padding:6px;">
+                  <div class="wf-img" style="height:64px;">IMG</div>
+                  <div class="wf-bar" style="width:80%;"></div>
+                  <div class="wf-bar" style="width:50%;height:6px;"></div>
+                </div>
+              </div>
+              <div class="row" style="margin-top:auto;border-top:1px solid var(--line-soft);padding-top:8px;">
+                <div class="wf-box" style="width:100%;height:26px;"></div>
+                <div class="wf-box" style="width:100%;height:26px;"></div>
+                <div class="wf-box" style="width:100%;height:26px;"></div>
+                <div class="wf-box" style="width:100%;height:26px;"></div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span><em>Location bar</em> — tappable, opens saved-address picker. Drives the delivery-radius filter on every search.</span></li>
+            <li><b>2</b><span><em>Universal search</em> — resolves shop name, product, category, brand, or PIN code in one query (PRD §8.1).</span></li>
+            <li><b>3</b><span><em>Category grid</em> — the ~25 <code>BusinessType</code> rows; "More" expands the full list.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 02 Search Results -->
+      <article class="plate" id="s02">
+        <div class="plate-head"><span class="plate-num">02 / 17</span><h3>Search Results</h3><span class="plate-api">GET /businesses?filter[…]</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="wf-box row" style="width:100%;padding:8px 10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">grocery near Andheri</span></div>
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="row" style="overflow:hidden;">
+                  <div class="wf-chip active">Open Now</div>
+                  <div class="wf-chip">Delivery</div>
+                  <div class="wf-chip">Pickup</div>
+                  <div class="wf-chip">Rating 4+</div>
+                  <div class="wf-chip">Verified</div>
+                </div>
+              </div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="row wf-box" style="padding:3px;width:140px;">
+                  <div class="wf-tag mvp" style="flex:1;text-align:center;">List</div>
+                  <div class="wf-tag" style="flex:1;text-align:center;color:var(--ink-soft);">Map</div>
+                </div>
+              </div>
+              <div class="el block">
+                <div class="badge">3</div>
+                <div class="wf-img" style="width:100%;height:90px;">MAP — 3 PINS</div>
+              </div>
+              <div class="row wf-box" style="padding:8px;">
+                <div class="wf-img" style="width:52px;height:52px;flex-shrink:0;">IMG</div>
+                <div class="col grow"><div class="wf-bar" style="width:70%;"></div><div class="wf-bar" style="width:45%;height:6px;"></div></div>
+                <div class="wf-tag mvp">4.6★</div>
+              </div>
+              <div class="row wf-box" style="padding:8px;">
+                <div class="wf-img" style="width:52px;height:52px;flex-shrink:0;">IMG</div>
+                <div class="col grow"><div class="wf-bar" style="width:65%;"></div><div class="wf-bar" style="width:40%;height:6px;"></div></div>
+                <div class="wf-tag mvp">4.2★</div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span><em>Filter chips</em> — combinable, mirrored in the URL query so results are shareable (Architecture §8).</span></li>
+            <li><b>2</b><span><em>List / Map toggle</em> — reserves the same content height so switching doesn't reflow the page.</span></li>
+            <li><b>3</b><span><em>Map surface</em> — Google Maps pins; tapping one opens the same business preview card as the list row.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 03 Business Profile -->
+      <article class="plate" id="s03">
+        <div class="plate-head"><span class="plate-num">03 / 17</span><h3>Business Profile</h3><span class="plate-api">GET /businesses/:slug</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen" style="padding:0;gap:0;">
+              <div class="wf-img" style="height:110px;border-radius:0;border-width:0 0 1px 0;">BANNER</div>
+              <div style="padding:0 14px;">
+                <div class="el block" style="margin-top:-24px;">
+                  <div class="badge">1</div>
+                  <div class="wf-circle" style="width:52px;height:52px;background:var(--paper-raised);border-width:2px;"></div>
+                </div>
+                <div class="row" style="margin-top:6px;"><div class="wf-bar" style="width:50%;height:11px;"></div><span class="wf-tag mvp">Verified</span></div>
+                <div class="el block" style="margin-top:6px;">
+                  <div class="badge">2</div>
+                  <div class="row"><span class="wf-tag ink">4.6★ (212)</span><span class="wf-tag mvp">Open now</span><div class="wf-bar" style="width:60px;height:6px;"></div></div>
+                </div>
+                <div class="el block" style="margin:10px 0;">
+                  <div class="badge">3</div>
+                  <div class="row" style="width:100%;">
+                    <div class="wf-btn" style="flex:1;">Call</div>
+                    <div class="wf-btn" style="flex:1;">WhatsApp</div>
+                    <div class="wf-btn" style="flex:1;">Directions</div>
+                  </div>
+                </div>
+                <div class="row" style="border-bottom:1.3px solid var(--line);padding-bottom:6px;">
+                  <span class="wf-tag mvp" style="border-bottom:2px solid var(--accent);border-radius:0;">Products</span>
+                  <span class="wf-bar" style="width:50px;"></span><span class="wf-bar" style="width:50px;"></span><span class="wf-bar" style="width:36px;"></span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;">
+                  <div class="wf-box col" style="padding:6px;"><div class="wf-img" style="height:48px;">IMG</div><div class="wf-bar" style="width:70%;"></div></div>
+                  <div class="wf-box col" style="padding:6px;"><div class="wf-img" style="height:48px;">IMG</div><div class="wf-bar" style="width:70%;"></div></div>
+                </div>
+              </div>
+              <div class="el block" style="padding:10px 14px;border-top:1px solid var(--line-soft);margin-top:auto;">
+                <div class="badge">4</div>
+                <div class="wf-btn primary" style="width:100%;">View Cart · ₹340</div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Logo overlaps the banner — standard local-business profile convention, immediately readable.</span></li>
+            <li><b>2</b><span>Rating, open/closed state, and distance are never hidden behind a tap (layout principle, §3 of the doc).</span></li>
+            <li><b>3</b><span>Contact row — Call / WhatsApp deep-link / Directions, per PRD §8.1.</span></li>
+            <li><b>4</b><span>Sticky cart bar persists across tab switches (Products/Services/Reviews/About).</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 04 Product Detail -->
+      <article class="plate" id="s04">
+        <div class="plate-head"><span class="plate-num">04 / 17</span><h3>Product Detail</h3><span class="plate-api">POST /carts/:businessId/items</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen" style="padding:0;gap:10px;">
+              <div class="wf-img" style="height:150px;border-radius:0;">PRODUCT PHOTO</div>
+              <div style="padding:0 14px;" class="col">
+                <div class="wf-bar" style="width:60%;height:12px;"></div>
+                <div class="wf-bar" style="width:30%;height:8px;"></div>
+                <div class="row"><span style="font-family:var(--font-mono);font-size:14px;">₹120</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);text-decoration:line-through;">₹140</span></div>
+                <div class="el block">
+                  <div class="badge">1</div>
+                  <div class="row"><div class="wf-chip active">500g</div><div class="wf-chip">1kg</div><div class="wf-chip">2kg</div></div>
+                </div>
+                <div class="el block">
+                  <div class="badge">2</div>
+                  <div class="row wf-box" style="width:96px;justify-content:space-between;padding:6px 12px;"><span>–</span><span>1</span><span>+</span></div>
+                </div>
+                <div class="wf-bar" style="width:100%;"></div>
+                <div class="wf-bar" style="width:80%;"></div>
+              </div>
+              <div class="el block" style="padding:10px 14px;border-top:1px solid var(--line-soft);margin-top:auto;">
+                <div class="badge">3</div>
+                <div class="wf-btn primary" style="width:100%;">Add to Cart · ₹120</div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Variant chips map to <code>ProductVariant</code> rows — price/stock swap per selection.</span></li>
+            <li><b>2</b><span>Quantity stepper is clamped to live <code>stockQuantity</code>.</span></li>
+            <li><b>3</b><span>Primary action price updates live with quantity × variant price.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 05 Cart & Checkout -->
+      <article class="plate" id="s05">
+        <div class="plate-head"><span class="plate-num">05 / 17</span><h3>Cart &amp; Checkout</h3><span class="plate-api">POST /orders</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="row wf-box" style="padding:7px;">
+                <div class="wf-img" style="width:36px;height:36px;flex-shrink:0;font-size:7px;">IMG</div>
+                <div class="wf-bar grow" style="width:auto;"></div>
+                <div class="wf-tag ink">2 ×</div>
+                <span style="font-family:var(--font-mono);font-size:10px;">₹240</span>
+              </div>
+              <div class="row wf-box" style="padding:7px;">
+                <div class="wf-img" style="width:36px;height:36px;flex-shrink:0;font-size:7px;">IMG</div>
+                <div class="wf-bar grow" style="width:auto;"></div>
+                <div class="wf-tag ink">1 ×</div>
+                <span style="font-family:var(--font-mono);font-size:10px;">₹80</span>
+              </div>
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="row" style="width:100%;"><div class="wf-box grow" style="height:30px;"></div><div class="wf-btn" style="width:64px;">Apply</div></div>
+              </div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="row wf-box" style="padding:3px;width:160px;"><div class="wf-tag mvp" style="flex:1;text-align:center;">Delivery</div><div class="wf-tag" style="flex:1;text-align:center;color:var(--ink-soft);">Pickup</div></div>
+              </div>
+              <div class="el block">
+                <div class="badge">3</div>
+                <div class="col" style="width:100%;font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);">
+                  <div class="row" style="justify-content:space-between;"><span>Subtotal</span><span>₹320</span></div>
+                  <div class="row" style="justify-content:space-between;"><span>Delivery fee</span><span>₹25</span></div>
+                  <div class="row" style="justify-content:space-between;"><span>Platform fee</span><span>₹5</span></div>
+                  <div class="row" style="justify-content:space-between;"><span>Discount</span><span>−₹50</span></div>
+                  <div class="row" style="justify-content:space-between;color:var(--ink);font-weight:600;border-top:1px solid var(--line-soft);padding-top:4px;"><span>Total</span><span>₹300</span></div>
+                </div>
+              </div>
+              <div class="el block" style="margin-top:auto;">
+                <div class="badge">4</div>
+                <div class="wf-btn primary" style="width:100%;">Place Order · ₹300</div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Coupon validated server-side against <code>Coupon</code> rules + redemption count, not applied client-side.</span></li>
+            <li><b>2</b><span>Fulfillment toggle — hidden entirely if the business has <code>pickupEnabled=false</code>.</span></li>
+            <li><b>3</b><span>Itemized charges — tabular numbers, matches the <code>Order</code> schema's fee columns exactly.</span></li>
+            <li><b>4</b><span>Total is always server-recomputed at submit; never trusts this displayed number (API Design §5.2).</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 06 Order Tracking -->
+      <article class="plate" id="s06">
+        <div class="plate-head"><span class="plate-num">06 / 17</span><h3>Order Tracking</h3><span class="plate-api">GET /orders/:id/track</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="row" style="justify-content:space-between;"><span style="font-family:var(--font-mono);font-size:10px;">ORD-2026-000123</span><span class="wf-tag mvp">Out for Delivery</span></div>
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="col" style="width:100%;">
+                  <div class="stepper">
+                    <div class="node done"></div><div class="seg done"></div>
+                    <div class="node done"></div><div class="seg done"></div>
+                    <div class="node active"></div><div class="seg"></div>
+                    <div class="node"></div>
+                  </div>
+                  <div class="stepper-labels"><span>Placed</span><span>Packing</span><span>Out&nbsp;for&nbsp;Delivery</span><span>Delivered</span></div>
+                </div>
+              </div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="wf-img" style="width:100%;height:90px;">MAP — LIVE ROUTE</div>
+              </div>
+              <div class="wf-tag mvp" style="align-self:flex-start;">Arriving in 18 min</div>
+              <div class="el block">
+                <div class="badge">3</div>
+                <div class="row wf-box" style="padding:8px;width:100%;">
+                  <div class="wf-circle" style="width:34px;height:34px;"></div>
+                  <div class="col grow"><div class="wf-bar" style="width:60%;"></div><div class="wf-bar" style="width:40%;height:6px;"></div></div>
+                  <div class="wf-btn" style="width:34px;height:34px;padding:0;">☎</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Status stepper — the one recurring visual pattern used identically in the merchant queue and delivery app.</span></li>
+            <li><b>2</b><span>Live position via the <code>delivery:{partnerId}</code> realtime room, throttled to 1 update/5s.</span></li>
+            <li><b>3</b><span>Delivery partner card — "Suresh," this build's recurring rider persona from the PRD.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 07 Service Enquiry -->
+      <article class="plate" id="s07">
+        <div class="plate-head"><span class="plate-num">07 / 17</span><h3>Service Enquiry <span class="wf-tag mvp" style="margin-left:6px;">Model B · MVP</span></h3><span class="plate-api">POST /service-requests</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="row wf-box" style="padding:8px;">
+                <div class="wf-img" style="width:40px;height:40px;flex-shrink:0;font-size:7px;">IMG</div>
+                <div class="col grow"><div class="wf-bar" style="width:75%;"></div><div class="wf-bar" style="width:50%;height:6px;"></div></div>
+                <span style="font-family:var(--font-mono);font-size:10px;">₹400</span>
+              </div>
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="row wf-box" style="padding:8px;width:100%;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">📅 Preferred date — Sat, 18 Jul</span></div>
+              </div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="row"><div class="wf-chip active">Morning</div><div class="wf-chip">Afternoon</div><div class="wf-chip">Evening</div></div>
+              </div>
+              <div class="wf-box" style="width:100%;height:52px;padding:8px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">Notes for the business (optional)</span></div>
+              <div class="el block">
+                <div class="badge">3</div>
+                <div class="fidelity-note" style="margin:0;padding:9px 10px;font-size:11px;">This is a <em style="font-style:normal;">request</em>, not a confirmed booking — the business will accept, decline, or suggest another time.</div>
+              </div>
+              <div class="wf-btn primary" style="width:100%;margin-top:auto;">Send Request</div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b> / <b>2</b><span>Date + time-window, not a slot picker — matches the PRD's approved sequencing: no calendar engine until V1.1.</span></li>
+            <li><b>3</b><span>Explicit expectation-setting copy — the single most important sentence on this screen, since it's the whole reason Model B looks different from Model A at MVP.</span></li>
+          </ol>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== MERCHANT DASHBOARD =================== -->
+    <section class="app-section" id="merchant">
+      <div class="app-head"><h2>Merchant Dashboard</h2><span class="platform">Next.js · responsive web</span></div>
+
+      <!-- 08 Store Setup -->
+      <article class="plate" id="s08">
+        <div class="plate-head"><span class="plate-num">08 / 17</span><h3>Store Setup Wizard</h3><span class="plate-api">POST /merchant/businesses</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense">
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="stepper" style="width:420px;">
+                  <div class="node active"></div><div class="seg"></div><div class="node"></div><div class="seg"></div>
+                  <div class="node"></div><div class="seg"></div><div class="node"></div><div class="seg"></div><div class="node"></div>
+                </div>
+              </div>
+              <div class="stepper-labels" style="width:420px;"><span>Info</span><span>Location</span><span>Docs</span><span>Bank</span><span>Review</span></div>
+              <div class="row" style="align-items:flex-start;">
+                <div class="col grow" style="max-width:420px;">
+                  <div class="el block">
+                    <div class="badge">2</div>
+                    <div class="col grow">
+                      <div class="wf-bar" style="width:120px;height:7px;"></div>
+                      <div class="wf-box" style="height:30px;"></div>
+                      <div class="wf-bar" style="width:120px;height:7px;margin-top:6px;"></div>
+                      <div class="wf-box" style="height:30px;"></div>
+                      <div class="wf-bar" style="width:120px;height:7px;margin-top:6px;"></div>
+                      <div class="wf-box" style="height:56px;"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="el block">
+                  <div class="badge">3</div>
+                  <div class="wf-box col" style="width:180px;padding:8px;">
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">LIVE PREVIEW</span>
+                    <div class="wf-img" style="height:50px;">BANNER</div>
+                    <div class="wf-bar" style="width:70%;"></div>
+                    <div class="wf-bar" style="width:40%;height:6px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="justify-content:flex-end;width:420px;"><div class="wf-btn">Back</div><div class="wf-btn primary">Save &amp; Continue</div></div>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>5-step progress — designed to complete in under 10 minutes on a phone (PRD's Ramesh persona).</span></li>
+            <li><b>2</b><span>Minimal required fields per step — depth is optional, not gatekept upfront.</span></li>
+            <li><b>3</b><span>Live preview closes the loop between "what I'm typing" and "what customers will see."</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 09 Catalog Management -->
+      <article class="plate" id="s09">
+        <div class="plate-head"><span class="plate-num">09 / 17</span><h3>Catalog Management</h3><span class="plate-api">CRUD /merchant/businesses/:id/products</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense" style="flex-direction:row;">
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="wf-box col" style="width:140px;flex-shrink:0;padding:10px;gap:8px;">
+                  <div class="wf-bar" style="width:70%;"></div>
+                  <div class="wf-bar" style="width:60%;margin-left:10px;"></div>
+                  <div class="wf-bar" style="width:60%;margin-left:10px;"></div>
+                  <div class="wf-bar" style="width:65%;"></div>
+                  <div class="wf-bar" style="width:55%;margin-left:10px;"></div>
+                </div>
+              </div>
+              <div class="col grow">
+                <div class="el block">
+                  <div class="badge">2</div>
+                  <div class="row" style="width:100%;"><div class="wf-box grow" style="height:28px;"></div><div class="wf-btn">Import CSV</div><div class="wf-btn primary">+ Add Product</div></div>
+                </div>
+                <table class="wf-table">
+                  <thead><tr><th></th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td><div class="wf-img" style="width:30px;height:30px;font-size:6px;">IMG</div></td><td><div class="wf-bar" style="width:80px;"></div></td><td><div class="wf-bar" style="width:50px;"></div></td><td>₹45</td><td><span class="wf-tag future">Low · 3</span></td><td><div class="wf-box" style="width:30px;height:14px;"></div></td></tr>
+                    <tr><td><div class="wf-img" style="width:30px;height:30px;font-size:6px;">IMG</div></td><td><div class="wf-bar" style="width:80px;"></div></td><td><div class="wf-bar" style="width:50px;"></div></td><td>₹120</td><td>42</td><td><div class="wf-box" style="width:30px;height:14px;"></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>Category tree — self-service, unlimited depth, scoped to this business only (Database Design §4.3).</span></li>
+            <li><b>2</b><span>Bulk CSV import returns per-row errors, never a silent partial failure (API Design §4.7).</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 10 Order Queue -->
+      <article class="plate" id="s10">
+        <div class="plate-head"><span class="plate-num">10 / 17</span><h3>Order Queue</h3><span class="plate-api">PATCH /merchant/orders/:id/status</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense" style="flex-direction:row;align-items:flex-start;">
+              <div class="col grow">
+                <div class="wf-bar" style="width:60px;height:8px;"></div>
+                <div class="el block">
+                  <div class="badge">2</div>
+                  <div class="wf-box col" style="padding:8px;gap:6px;">
+                    <div class="row" style="justify-content:space-between;"><span class="wf-tag future">00:47</span><span style="font-family:var(--font-mono);font-size:10px;">₹340</span></div>
+                    <div class="wf-bar" style="width:90px;"></div>
+                    <div class="row"><div class="wf-btn" style="flex:1;">Reject</div><div class="wf-btn primary" style="flex:1;">Accept</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col grow"><div class="wf-bar" style="width:60px;height:8px;"></div><div class="wf-box" style="height:60px;"></div></div>
+              <div class="col grow"><div class="wf-bar" style="width:60px;height:8px;"></div><div class="wf-box" style="height:60px;"></div></div>
+              <div class="col grow"><div class="wf-bar" style="width:80px;height:8px;"></div><div class="wf-box" style="height:60px;"></div></div>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>Kanban columns mirror the <code>OrderStatus</code> state machine exactly — New → Accepted → Packing → Ready → Out for Delivery.</span></li>
+            <li><b>2</b><span>Countdown badge — unacknowledged orders escalate (sound/vibration) past a threshold, directly addressing the "missed orders" pain point (PRD persona: Ramesh).</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 11 Sales Dashboard -->
+      <article class="plate" id="s11">
+        <div class="plate-head"><span class="plate-num">11 / 17</span><h3>Sales Dashboard</h3><span class="plate-api">GET /merchant/.../analytics/sales</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense">
+              <div class="el block">
+                <div class="badge">3</div>
+                <div class="row" style="width:220px;"><div class="wf-tag mvp" style="flex:1;text-align:center;">Today</div><div class="wf-tag" style="flex:1;text-align:center;color:var(--ink-soft);">Week</div><div class="wf-tag" style="flex:1;text-align:center;color:var(--ink-soft);">Month</div></div>
+              </div>
+              <div class="el block">
+                <div class="badge">1</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;">
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">REVENUE</span><span style="font-family:var(--font-mono);font-size:16px;">₹8,420</span></div>
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">ORDERS</span><span style="font-family:var(--font-mono);font-size:16px;">62</span></div>
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">NEW CUST.</span><span style="font-family:var(--font-mono);font-size:16px;">9</span></div>
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">AOV</span><span style="font-family:var(--font-mono);font-size:16px;">₹136</span></div>
+                </div>
+              </div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="wf-box grow" style="padding:14px;">
+                  <div class="chart"><div class="bar" style="height:40%;"></div><div class="bar" style="height:60%;"></div><div class="bar" style="height:35%;"></div><div class="bar" style="height:80%;"></div><div class="bar" style="height:55%;"></div><div class="bar" style="height:90%;"></div><div class="bar" style="height:70%;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>Stat tiles read from a pre-aggregated materialized view, not a live query, per Database Design §4.6.</span></li>
+            <li><b>2</b><span>7-day revenue trend, tabular-numeric axis.</span></li>
+            <li><b>3</b><span>Range selector — Today / Week / Month, matching the PRD's sales-dashboard requirement exactly.</span></li>
+          </ol>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== ADMIN PANEL =================== -->
+    <section class="app-section" id="admin">
+      <div class="app-head"><h2>Admin Panel</h2><span class="platform">Next.js · responsive web</span></div>
+
+      <!-- 12 Verification Queue -->
+      <article class="plate" id="s12">
+        <div class="plate-head"><span class="plate-num">12 / 17</span><h3>Verification Queue</h3><span class="plate-api">PATCH /admin/businesses/:id/verify</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense">
+              <div class="row"><div class="wf-tag mvp">Pending (14)</div><div class="wf-tag future">Approved</div><div class="wf-tag future">Rejected</div></div>
+              <table class="wf-table">
+                <thead><tr><th>Business</th><th>Type</th><th>City</th><th>Documents</th><th>Submitted</th><th></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="wf-bar" style="width:110px;"></div></td>
+                    <td><div class="wf-bar" style="width:50px;"></div></td>
+                    <td><div class="wf-bar" style="width:50px;"></div></td>
+                    <td class="el block"><div class="badge">2</div><a href="#" style="font-family:var(--font-mono);font-size:10px;">View (3)</a></td>
+                    <td><span style="font-family:var(--font-mono);font-size:10px;">2 days ago</span></td>
+                    <td class="el block"><div class="badge">1</div><div class="row"><div class="wf-btn" style="padding:5px 8px;">Reject</div><div class="wf-btn primary" style="padding:5px 8px;">Approve</div></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="wf-bar" style="width:130px;"></div></td>
+                    <td><div class="wf-bar" style="width:50px;"></div></td>
+                    <td><div class="wf-bar" style="width:50px;"></div></td>
+                    <td><span style="font-family:var(--font-mono);font-size:10px;">View (3)</span></td>
+                    <td><span style="font-family:var(--font-mono);font-size:10px;">6 hrs ago</span></td>
+                    <td><div class="row"><div class="wf-btn" style="padding:5px 8px;">Reject</div><div class="wf-btn primary" style="padding:5px 8px;">Approve</div></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>Approve/reject writes an <code>AuditLog</code> row — every verification decision is attributable (Architecture §9).</span></li>
+            <li><b>2</b><span>Document preview — GST, PAN, bank proof — opens inline, no separate download step.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 13 Business Management -->
+      <article class="plate" id="s13">
+        <div class="plate-head"><span class="plate-num">13 / 17</span><h3>Business Management</h3><span class="plate-api">GET /admin/businesses</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense">
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="row" style="width:100%;"><div class="wf-box" style="height:26px;width:110px;"></div><div class="wf-box" style="height:26px;width:110px;"></div><div class="wf-box" style="height:26px;width:110px;"></div><div class="wf-box grow" style="height:26px;"></div></div>
+              </div>
+              <table class="wf-table">
+                <thead><tr><th></th><th>Name</th><th>Owner</th><th>City</th><th>Status</th><th>Orders</th><th>Commission</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="wf-box" style="width:14px;height:14px;"></div></td><td><div class="wf-bar" style="width:100px;"></div></td><td><div class="wf-bar" style="width:70px;"></div></td><td><div class="wf-bar" style="width:50px;"></div></td><td><span class="wf-tag mvp">Verified</span></td><td>318</td><td>10%</td></tr>
+                  <tr><td><div class="wf-box" style="width:14px;height:14px;"></div></td><td><div class="wf-bar" style="width:100px;"></div></td><td><div class="wf-bar" style="width:70px;"></div></td><td><div class="wf-bar" style="width:50px;"></div></td><td><span class="wf-tag future">Suspended</span></td><td>52</td><td>12%</td></tr>
+                </tbody>
+              </table>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="row wf-box" style="padding:8px 12px;background:var(--accent-soft);border-color:transparent;"><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);">2 selected</span><div class="wf-btn" style="margin-left:auto;">Export</div><div class="wf-btn">Bulk Suspend</div></div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>Filters: city, business type, status — the same filter convention used across every admin table.</span></li>
+            <li><b>2</b><span>Bulk action bar appears only once rows are selected — stays out of the way otherwise.</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 14 Overview Dashboard -->
+      <article class="plate" id="s14">
+        <div class="plate-head"><span class="plate-num">14 / 17</span><h3>Overview Dashboard</h3><span class="plate-api">GET /admin/analytics/revenue</span></div>
+        <div class="plate-body web">
+          <div class="device device--web">
+            <div class="browserbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+            <div class="screen dense">
+              <div class="row" style="justify-content:space-between;">
+                <div class="el block">
+                  <div class="badge">3</div>
+                  <div class="wf-box row" style="padding:6px 10px;"><span style="font-family:var(--font-mono);font-size:10px;">Mumbai</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">▾</span></div>
+                </div>
+              </div>
+              <div class="el block">
+                <div class="badge">1</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;">
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">GMV (MTD)</span><span style="font-family:var(--font-mono);font-size:15px;">₹18.4L</span></div>
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">ACTIVE BIZ.</span><span style="font-family:var(--font-mono);font-size:15px;">512</span></div>
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">WEEKLY TXN CUST.</span><span style="font-family:var(--font-mono);font-size:15px;">3,140</span></div>
+                  <div class="wf-box col" style="padding:10px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">FULFILL. RATE</span><span style="font-family:var(--font-mono);font-size:15px;">96.2%</span></div>
+                </div>
+              </div>
+              <div class="row" style="align-items:stretch;">
+                <div class="wf-box col grow" style="padding:10px;">
+                  <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">DISPUTES</span>
+                  <div class="wf-bar" style="width:90%;"></div><div class="wf-bar" style="width:70%;"></div><div class="wf-bar" style="width:80%;"></div>
+                </div>
+                <div class="el block grow">
+                  <div class="badge">2</div>
+                  <div class="wf-box col grow" style="padding:10px;">
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">SUPPORT QUEUE</span>
+                    <div class="wf-bar" style="width:85%;"></div><div class="wf-bar" style="width:60%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations" style="max-width:640px;display:flex;flex-wrap:wrap;gap:0 24px;">
+            <li><b>1</b><span>"Weekly Transacting Customers" is the PRD's own North Star metric (§4) — surfaced here first, not buried.</span></li>
+            <li><b>2</b><span>Disputes + support queue side-by-side — the two things ops actually needs to react to daily.</span></li>
+            <li><b>3</b><span>City selector — disabled/single-value at MVP, wired for the V2 multi-city scoping already in the schema (Architecture §18).</span></li>
+          </ol>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== DELIVERY PARTNER APP =================== -->
+    <section class="app-section" id="delivery">
+      <div class="app-head"><h2>Delivery Partner App</h2><span class="platform">React Native · native mobile</span></div>
+
+      <!-- 15 Order Offer -->
+      <article class="plate" id="s15">
+        <div class="plate-head"><span class="plate-num">15 / 17</span><h3>Order Offer</h3><span class="plate-api">POST /delivery-partners/deliveries/:id/accept</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="el block" style="justify-content:center;">
+                <div class="badge">1</div>
+                <div class="wf-circle" style="width:64px;height:64px;display:flex;align-items:center;justify-content:center;margin:10px auto;font-family:var(--font-mono);font-size:15px;border-width:3px;border-color:var(--accent);color:var(--accent);">14s</div>
+              </div>
+              <div class="wf-box col" style="padding:10px;">
+                <div class="row"><span class="wf-tag ink">Pickup</span><div class="wf-bar grow"></div></div>
+                <div class="wf-bar" style="width:80%;margin-left:20px;"></div>
+                <div class="row" style="margin-top:6px;"><span class="wf-tag ink">Drop</span><div class="wf-bar grow"></div></div>
+                <div class="wf-bar" style="width:70%;margin-left:20px;"></div>
+                <div class="row" style="justify-content:space-between;margin-top:8px;border-top:1px solid var(--line-soft);padding-top:6px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">2.3 km</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">~12 min</span></div>
+              </div>
+              <div class="wf-tag mvp" style="align-self:center;font-size:14px;padding:4px 10px;">Earn ₹42</div>
+              <div class="el block" style="margin-top:auto;">
+                <div class="badge">2</div>
+                <div class="row" style="width:100%;"><div class="wf-btn" style="flex:1;">Reject</div><div class="wf-btn primary" style="flex:1;">Accept</div></div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Countdown — offer expires and returns to the pool if unanswered; timer visually dominant since it's time-pressured.</span></li>
+            <li><b>2</b><span>Accept uses a Redis lock server-side — two partners tapping simultaneously, exactly one wins (Architecture §15).</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 16 Active Delivery -->
+      <article class="plate" id="s16">
+        <div class="plate-head"><span class="plate-num">16 / 17</span><h3>Active Delivery</h3><span class="plate-api">POST .../pickup · .../complete</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen" style="padding:0;gap:0;">
+              <div class="wf-img" style="height:150px;border-radius:0;">MAP — ROUTE TO DROP</div>
+              <div class="col" style="padding:14px;">
+                <div class="el block">
+                  <div class="badge">1</div>
+                  <div class="col grow">
+                    <span class="wf-tag mvp" style="align-self:flex-start;">Step 2 of 2 — Head to drop</span>
+                    <div class="wf-bar" style="width:85%;margin-top:6px;"></div>
+                    <div class="wf-btn" style="margin-top:8px;">Navigate</div>
+                  </div>
+                </div>
+                <div class="el block" style="margin-top:14px;">
+                  <div class="badge">2</div>
+                  <div class="col grow">
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">Enter delivery OTP</span>
+                    <div class="row" style="margin-top:4px;"><div class="wf-box" style="width:34px;height:34px;"></div><div class="wf-box" style="width:34px;height:34px;"></div><div class="wf-box" style="width:34px;height:34px;"></div><div class="wf-box" style="width:34px;height:34px;"></div></div>
+                  </div>
+                </div>
+                <div class="wf-btn primary" style="margin-top:14px;">Mark Delivered</div>
+              </div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Two-step flow — pickup then drop — same screen, state-dependent content.</span></li>
+            <li><b>2</b><span>OTP-gated completion doubles as the fraud/dispute-prevention mechanism (Database Design §6).</span></li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 17 Earnings & Wallet -->
+      <article class="plate" id="s17">
+        <div class="plate-head"><span class="plate-num">17 / 17</span><h3>Earnings &amp; Wallet</h3><span class="plate-api">GET /delivery-partners/me/earnings</span></div>
+        <div class="plate-body">
+          <div class="device device--native">
+            <div class="statusbar"><span>9:41</span><span>●●●</span></div>
+            <div class="screen">
+              <div class="el block">
+                <div class="badge">1</div>
+                <div class="wf-box col" style="padding:12px;width:100%;">
+                  <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">AVAILABLE BALANCE</span>
+                  <span style="font-family:var(--font-mono);font-size:20px;">₹1,240</span>
+                  <div class="row" style="justify-content:space-between;margin-top:6px;border-top:1px solid var(--line-soft);padding-top:6px;"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-soft);">Cash to remit</span><span style="font-family:var(--font-mono);font-size:11px;">₹320</span></div>
+                </div>
+              </div>
+              <div class="wf-box" style="padding:10px;"><div class="chart" style="height:40px;"><div class="bar" style="height:50%;"></div><div class="bar" style="height:70%;"></div><div class="bar" style="height:30%;"></div><div class="bar" style="height:90%;"></div><div class="bar" style="height:60%;"></div><div class="bar" style="height:75%;"></div><div class="bar" style="height:45%;"></div></div></div>
+              <div class="el block">
+                <div class="badge">2</div>
+                <div class="col grow" style="font-family:var(--font-mono);font-size:9.5px;">
+                  <div class="row" style="justify-content:space-between;"><span>Delivery fee — ORD-000119</span><span>+₹42</span></div>
+                  <div class="row" style="justify-content:space-between;"><span>Incentive — peak hour</span><span>+₹15</span></div>
+                  <div class="row" style="justify-content:space-between;color:var(--ink-soft);"><span>COD remitted</span><span>−₹320</span></div>
+                </div>
+              </div>
+              <div class="wf-btn primary" style="margin-top:auto;">Withdraw</div>
+            </div>
+          </div>
+          <ol class="annotations">
+            <li><b>1</b><span>Balance is a derived <code>SUM()</code> over the <code>DeliveryEarning</code> ledger, never a mutable column (Database Design §4.1).</span></li>
+            <li><b>2</b><span>Transaction list — one row per ledger entry, including COD remittance against <code>CashCollection</code>.</span></li>
+          </ol>
+        </div>
+      </article>
+    </section>
+
+    <footer class="doc-footer">
+      Phase 5 / 10 — Hyperlocal Digital Marketplace Platform — Arutech Consultancy Services LLP<br>
+      See <a href="WIREFRAMES.md">WIREFRAMES.md</a> for user flows, layout principles, and accessibility notes.
+    </footer>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.navgroup a'));
+    var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    if (!('IntersectionObserver' in window) || !targets.length) return;
+    var byId = {};
+    links.forEach(function(a){ byId[a.getAttribute('href').slice(1)] = a; });
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = byId[entry.target.id];
+        if (!link) return;
+        if (entry.isIntersecting){
+          links.forEach(function(a){ a.classList.remove('current'); });
+          link.classList.add('current');
+        }
+      });
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+    targets.forEach(function(t){ observer.observe(t); });
+  })();
+</script>

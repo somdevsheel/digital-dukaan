@@ -1,0 +1,22 @@
+{
+  "name": "@platform/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Typed fetch client generated from the OpenAPI spec @app/api emits — the mechanism that keeps every client app in sync with the real API contract (Architecture §20).",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "generate": "openapi-typescript http://localhost:4000/api/v1/docs-json -o src/generated/schema.d.ts"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.13.0",
+    "@platform/domain-types": "workspace:*"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.4.0",
+    "typescript": "^5.7.0",
+    "@platform/config": "workspace:*"
+  }
+}

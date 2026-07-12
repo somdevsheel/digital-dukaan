@@ -1,0 +1,27 @@
+{
+  "name": "hyperlocal-marketplace",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "db:migrate": "pnpm --filter @app/api prisma migrate dev",
+    "db:seed": "pnpm --filter @app/api exec tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "prettier": "^3.4.0",
+    "typescript": "^5.7.0",
+    "eslint": "^9.17.0"
+  }
+}

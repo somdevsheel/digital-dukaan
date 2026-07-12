@@ -1,0 +1,19 @@
+{
+  "name": "@platform/validation-schemas",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Zod schemas shared between client-side form validation (React Hook Form) and a mirror of the API's class-validator DTOs — kept hand-in-hand with API Design, not duplicated ad hoc per app.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@platform/config": "workspace:*"
+  }
+}

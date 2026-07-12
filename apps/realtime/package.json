@@ -1,0 +1,28 @@
+{
+  "name": "@app/realtime",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Socket.IO gateway — order status, delivery location, chat. See docs/02-architecture/ARCHITECTURE.md §14",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.0",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "ioredis": "^5.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "pino": "^9.5.0",
+    "@platform/domain-types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "jest": "^29.7.0",
+    "@platform/config": "workspace:*"
+  }
+}
