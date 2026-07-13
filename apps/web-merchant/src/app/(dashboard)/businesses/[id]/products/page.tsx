@@ -61,10 +61,26 @@ function formatRupees(paise: number): string {
   return `₹${(paise / 100).toFixed(2)}`;
 }
 
+// z.coerce.number() alone treats an empty input as 0, which passes .min(0) silently
+// and would save the product at ₹0.00 with no validation error — preprocessing "" to
+// undefined lets required_error catch it instead.
+const priceRupeesField = z.preprocess(
+  (val) => (val === "" ? undefined : val),
+  z.coerce.number({ required_error: "Enter a price", invalid_type_error: "Enter a price" }).min(0, "Enter a price"),
+);
+
+const editProductSchema = z.object({
+  name: z.string().min(1, "Enter a product name"),
+  categoryId: z.string().optional(),
+  priceRupees: priceRupeesField,
+  stockQuantity: z.coerce.number().int().min(0).optional(),
+});
+type EditProductForm = z.infer<typeof editProductSchema>;
+
 const addProductSchema = z.object({
   name: z.string().min(1, "Enter a product name"),
   categoryId: z.string().optional(),
-  priceRupees: z.coerce.number().min(0, "Enter a price"),
+  priceRupees: priceRupeesField,
   stockQuantity: z.coerce.number().int().min(0).optional(),
 });
 type AddProductForm = z.infer<typeof addProductSchema>;
@@ -76,6 +92,8 @@ export default function ProductsPage() {
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editFormError, setEditFormError] = useState<string | null>(null);
 
   const { data: categories, isLoading: loadingCategories } = useQuery({
     queryKey: ["merchant", "categories", businessId],
@@ -143,6 +161,59 @@ export default function ProductsPage() {
   const onSubmitProduct = (values: AddProductForm) => {
     setFormError(null);
     createProduct.mutate(values);
+  };
+
+  const {
+    register: registerEdit,
+    handleSubmit: handleEditSubmit,
+    control: editControl,
+    reset: resetEditForm,
+    formState: { errors: editErrors, isSubmitting: isEditSubmitting },
+  } = useForm<EditProductForm>({ resolver: zodResolver(editProductSchema) });
+
+  const updateProduct = useMutation({
+    mutationFn: async (values: EditProductForm) => {
+      if (!editingProduct) return;
+      const pricePaise = Math.round(values.priceRupees * 100);
+      await apiFetch(`/merchant/businesses/${businessId}/products/${editingProduct.id}`, {
+        method: "PATCH",
+        body: {
+          ...(values.categoryId ? { categoryId: values.categoryId } : {}),
+          name: values.name,
+          basePricePaise: pricePaise,
+        },
+      });
+      const variantId = editingProduct.variants[0]?.id;
+      if (variantId) {
+        await apiFetch(`/merchant/businesses/${businessId}/products/${editingProduct.id}/variants/${variantId}`, {
+          method: "PATCH",
+          body: { pricePaise, stockQuantity: values.stockQuantity ?? 0 },
+        });
+      }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["merchant", "products", businessId] });
+      setEditingProduct(null);
+    },
+    onError: (err) => {
+      setEditFormError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    },
+  });
+
+  const openEditProduct = (product: Product) => {
+    setEditFormError(null);
+    setEditingProduct(product);
+    resetEditForm({
+      name: product.name,
+      categoryId: product.categoryId ?? undefined,
+      priceRupees: product.basePricePaise / 100,
+      stockQuantity: product.variants[0]?.stockQuantity ?? 0,
+    });
+  };
+
+  const onSubmitEditProduct = (values: EditProductForm) => {
+    setEditFormError(null);
+    updateProduct.mutate(values);
   };
 
   return (
@@ -265,6 +336,7 @@ export default function ProductsPage() {
                 <TableHead>Price</TableHead>
                 <TableHead>Stock</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -276,11 +348,73 @@ export default function ProductsPage() {
                   <TableCell>
                     <Badge variant={product.isActive ? "success" : "secondary"}>{product.isActive ? "Active" : "Inactive"}</Badge>
                   </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => openEditProduct(product)}>
+                      Edit
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         )}
+
+        <Dialog open={editingProduct !== null} onOpenChange={(open) => !open && setEditingProduct(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit product</DialogTitle>
+              <DialogDescription>Updates the product's name, category, price, and stock.</DialogDescription>
+            </DialogHeader>
+            <form className="flex flex-col gap-4" onSubmit={handleEditSubmit(onSubmitEditProduct)}>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="edit-product-name">Name</Label>
+                <Input id="edit-product-name" {...registerEdit("name")} />
+                {editErrors.name && <p className="text-xs text-destructive">{editErrors.name.message}</p>}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="edit-product-category">Category (optional)</Label>
+                <Controller
+                  name="categoryId"
+                  control={editControl}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} {...(field.value !== undefined ? { value: field.value } : {})}>
+                      <SelectTrigger id="edit-product-category">
+                        <SelectValue placeholder="Uncategorized" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories?.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="edit-product-price">Price, ₹</Label>
+                  <Input id="edit-product-price" type="number" step="any" min={0} {...registerEdit("priceRupees")} />
+                  {editErrors.priceRupees && <p className="text-xs text-destructive">{editErrors.priceRupees.message}</p>}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="edit-product-stock">Stock</Label>
+                  <Input id="edit-product-stock" type="number" min={0} {...registerEdit("stockQuantity")} />
+                </div>
+              </div>
+
+              {editFormError && <p className="text-sm text-destructive">{editFormError}</p>}
+              <DialogFooter>
+                <Button type="submit" disabled={isEditSubmitting || updateProduct.isPending}>
+                  {updateProduct.isPending ? "Saving…" : "Save changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
