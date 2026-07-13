@@ -29,7 +29,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const correlationId = request.headers["x-correlation-id"] ?? "unknown";
+    const correlationIdHeader = request.headers["x-correlation-id"];
+    const correlationId = Array.isArray(correlationIdHeader) ? correlationIdHeader[0] : (correlationIdHeader ?? "unknown");
 
     if (exception instanceof AppException) {
       response.status(exception.getStatus()).json({
@@ -73,9 +74,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             ? ((body as { message: string[] }).message.join("; "))
             : ((body as { message?: string }).message ?? exception.message);
 
+      // Compared against the literal 400, not HttpStatus.BAD_REQUEST — `status` is a plain
+      // number from getStatus(), and comparing a number to an enum member trips
+      // no-unsafe-enum-comparison; the literal says exactly the same thing without it.
+      const isBadRequest = status === 400;
       response.status(status).json({
         error: {
-          code: status === HttpStatus.BAD_REQUEST ? "VALIDATION_ERROR" : "INTERNAL_ERROR",
+          code: isBadRequest ? "VALIDATION_ERROR" : "INTERNAL_ERROR",
           message,
         },
       } satisfies ErrorEnvelope);

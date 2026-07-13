@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens — a warm coral/amber accent, distinct from the Merchant Dashboard's teal
+ * and the Admin Panel's indigo. Those two are desk-bound back-office tools; this is the
+ * consumer-facing storefront (browse, discover, tap through to the app), so it earns a
+ * warmer, more energetic accent. Same shadcn CSS-variable convention, so @platform/ui
+ * themes identically. Final brand palette still pending the product name decision (PRD §16).
+ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 12%;
+    --primary: 18 88% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 12%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 18 90% 94%;
+    --accent-foreground: 18 80% 30%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 18 88% 52%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 0 0% 95%;
+    --card: 240 8% 11%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 8% 11%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 18 85% 60%;
+    --primary-foreground: 240 10% 8%;
+    --secondary: 240 6% 16%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 240 6% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 18 40% 18%;
+    --accent-foreground: 18 85% 80%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 18 85% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
+  }
+}

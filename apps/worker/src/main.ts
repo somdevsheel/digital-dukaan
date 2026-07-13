@@ -7,7 +7,6 @@ import { AppModule } from "./app.module";
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.createApplicationContext(AppModule, { bufferLogs: true });
   app.enableShutdownHooks();
-  // eslint-disable-next-line no-console
   console.log("@app/worker running — consuming: notifications, maintenance");
 }
 

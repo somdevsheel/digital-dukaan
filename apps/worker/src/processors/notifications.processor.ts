@@ -11,8 +11,18 @@ interface NotificationJobData {
   payload: Record<string, unknown>;
 }
 
+function stringifyPayloadValue(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  // Payload values are expected to be primitives (see every NotificationListener call
+  // site) — an object/array here is unexpected, so it's rendered as real JSON rather than
+  // risking a silent, useless "[object Object]" in a message a customer/merchant reads.
+  return JSON.stringify(value);
+}
+
 function renderTemplate(template: string, payload: Record<string, unknown>): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (_match, key: string) => String(payload[key] ?? ""));
+  return template.replace(/\{\{(\w+)\}\}/g, (_match, key: string) => stringifyPayloadValue(payload[key]));
 }
 
 /**

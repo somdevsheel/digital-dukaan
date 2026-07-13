@@ -9,23 +9,26 @@ import type { ChannelSenderPort, ChannelSendInput } from "./channel-sender.port"
 @Injectable()
 export class ConsolePushSender implements ChannelSenderPort {
   private readonly logger = new Logger("PushSender");
-  async send(input: ChannelSendInput): Promise<void> {
+  send(input: ChannelSendInput): Promise<void> {
     this.logger.log(`PUSH -> ${input.to} [${input.templateKey}] ${JSON.stringify(input.payload)}`);
+    return Promise.resolve();
   }
 }
 
 @Injectable()
 export class ConsoleEmailSender implements ChannelSenderPort {
   private readonly logger = new Logger("EmailSender");
-  async send(input: ChannelSendInput): Promise<void> {
+  send(input: ChannelSendInput): Promise<void> {
     this.logger.log(`EMAIL -> ${input.to} [${input.templateKey}] ${JSON.stringify(input.payload)}`);
+    return Promise.resolve();
   }
 }
 
 @Injectable()
 export class ConsoleSmsSender implements ChannelSenderPort {
   private readonly logger = new Logger("SmsSender");
-  async send(input: ChannelSendInput): Promise<void> {
+  send(input: ChannelSendInput): Promise<void> {
     this.logger.log(`SMS -> ${input.to} [${input.templateKey}] ${JSON.stringify(input.payload)}`);
+    return Promise.resolve();
   }
 }

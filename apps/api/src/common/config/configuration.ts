@@ -36,6 +36,11 @@ export default () => ({
   },
 
   razorpay: {
+    // Defaults to the real gateway (today's only behavior) so an unset var in production
+    // never silently stops collecting real payments. Set to "mock" for local dev — see
+    // MockPaymentGatewayAdapter's doc comment — since a placeholder Razorpay key/secret
+    // makes every real API call fail anyway.
+    provider: process.env.PAYMENT_PROVIDER ?? "razorpay",
     keyId: process.env.RAZORPAY_KEY_ID,
     keySecret: process.env.RAZORPAY_KEY_SECRET,
     webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET,

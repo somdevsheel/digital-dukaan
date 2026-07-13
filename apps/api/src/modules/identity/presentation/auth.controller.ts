@@ -95,7 +95,7 @@ export class AuthController {
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   async refresh(@Body() dto: RefreshTokenDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const rawToken: string | undefined = dto.refreshToken ?? req.cookies?.[REFRESH_COOKIE];
+    const rawToken = dto.refreshToken ?? getCookie(req, REFRESH_COOKIE);
     if (!rawToken) {
       throw new UnauthenticatedException("No refresh token present");
     }
@@ -107,7 +107,7 @@ export class AuthController {
   @Post("logout")
   @HttpCode(HttpStatus.NO_CONTENT)
   async logoutSession(@Body() dto: RefreshTokenDto, @Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
-    const rawToken = dto.refreshToken ?? req.cookies?.[REFRESH_COOKIE];
+    const rawToken = dto.refreshToken ?? getCookie(req, REFRESH_COOKIE);
     if (rawToken) {
       await this.logout.execute(rawToken);
     }
@@ -150,6 +150,13 @@ export class AuthController {
 
 function requestContext(req: Request): { ipAddress?: string | undefined; userAgent?: string | undefined } {
   return { ipAddress: req.ip, userAgent: req.headers["user-agent"] };
+}
+
+// @types/cookie-parser declares Request.cookies as `any` — narrowed here once so no call
+// site propagates that `any` into its own inference.
+function getCookie(req: Request, name: string): string | undefined {
+  const cookies = req.cookies as Record<string, string | undefined> | undefined;
+  return cookies?.[name];
 }
 
 function cookieOptions() {

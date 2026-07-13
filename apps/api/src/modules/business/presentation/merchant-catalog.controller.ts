@@ -147,4 +147,23 @@ export class MerchantCatalogController {
   ) {
     return this.services.createImageUploadUrl(businessId, serviceId, dto.fileName, dto.contentType);
   }
+
+  @Post("services/:serviceId/images")
+  addServiceImage(
+    @Param("businessId") businessId: string,
+    @Param("serviceId") serviceId: string,
+    @Body() dto: AddMediaAssetDto,
+  ) {
+    return this.services.addImage(businessId, serviceId, dto.url, dto.sortOrder ?? 0);
+  }
+
+  @Delete("services/:serviceId/images/:imageId")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeServiceImage(
+    @Param("businessId") businessId: string,
+    @Param("serviceId") serviceId: string,
+    @Param("imageId") imageId: string,
+  ): Promise<void> {
+    await this.services.removeImage(businessId, serviceId, imageId);
+  }
 }

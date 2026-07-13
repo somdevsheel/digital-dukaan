@@ -3,7 +3,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import {
   PRODUCT_REPOSITORY,
-  type CreateProductInput,
   type ProductImageRecord,
   type ProductRecord,
   type ProductRepository,
@@ -30,7 +29,7 @@ export class ProductUseCase {
     if (await this.products.slugExists(businessId, dto.slug)) {
       throw new SlugAlreadyTakenException();
     }
-    const product = await this.products.create(businessId, dto as CreateProductInput);
+    const product = await this.products.create(businessId, dto);
     this.events.emit("product.upserted", { productId: product.id, businessId });
     return product;
   }

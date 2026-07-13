@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  Logger,
   NestInterceptor,
 } from "@nestjs/common";
 import type { Request } from "express";
@@ -21,9 +22,11 @@ const TTL_SECONDS = 24 * 60 * 60;
 // to mint an idempotency key for reads would be pointless overhead.
 @Injectable()
 export class IdempotencyInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(IdempotencyInterceptor.name);
+
   constructor(@Inject(REDIS_CLIENT) private readonly redis: Redis) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler) {
+  async intercept(context: ExecutionContext, next: CallHandler<unknown>) {
     const request = context.switchToHttp().getRequest<Request>();
     const key = request.headers["idempotency-key"];
 
@@ -62,20 +65,20 @@ export class IdempotencyInterceptor implements NestInterceptor {
       TTL_SECONDS,
     );
 
+    // tap()'s Observer callbacks must return void, not a Promise — so the Redis writes
+    // are fire-and-forget from RxJS's perspective, with their own explicit .catch() rather
+    // than an async callback whose rejection RxJS would otherwise silently swallow.
     return next.handle().pipe(
       tap({
-        next: async (response) => {
-          await this.redis.set(
-            redisKey,
-            JSON.stringify({ bodyHash, status: "done", response }),
-            "EX",
-            TTL_SECONDS,
-          );
+        next: (response: unknown) => {
+          this.redis
+            .set(redisKey, JSON.stringify({ bodyHash, status: "done", response }), "EX", TTL_SECONDS)
+            .catch((err: unknown) => this.logger.error(`Failed to cache idempotent response for ${redisKey}`, err));
         },
-        error: async () => {
+        error: () => {
           // Let a failed attempt be retried with the same key rather than permanently
           // wedging it in "pending".
-          await this.redis.del(redisKey);
+          this.redis.del(redisKey).catch((err: unknown) => this.logger.error(`Failed to clear idempotency key ${redisKey}`, err));
         },
       }),
     );

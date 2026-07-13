@@ -37,8 +37,14 @@ coverage/
 # Turbo
 .turbo/
 
+# Claude Code — transient agent worktrees, not project content
+.claude/worktrees/
+
 # Prisma
 apps/api/prisma/migrations/dev/
 
 # Local infra volumes
 .docker-data/
+# Personal local overrides (e.g. remapped ports/volumes for a host's existing containers or
+# filesystem quirks) — same "never commit a real .env" reasoning, this is machine-specific.
+docker-compose.override.yml

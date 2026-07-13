@@ -16,7 +16,7 @@ export class PrismaAddressRepository implements AddressRepository {
       where: { userId, deletedAt: null },
       orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
     });
-    return addresses.map(this.toRecord);
+    return addresses.map((address) => this.toRecord(address));
   }
 
   async findById(id: string): Promise<AddressRecord | null> {

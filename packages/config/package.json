@@ -2,6 +2,7 @@
   "name": "@platform/config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "Shared ESLint/TypeScript/Prettier presets — every app and package extends these rather than redefining lint/compiler rules locally.",
   "main": "./eslint-preset.js",
   "dependencies": {

@@ -7,7 +7,8 @@ import type { OtpSenderPort } from "../../domain/services/otp-sender.port";
 export class ConsoleOtpSender implements OtpSenderPort {
   private readonly logger = new Logger("OTP");
 
-  async send(phone: string, code: string): Promise<void> {
+  send(phone: string, code: string): Promise<void> {
     this.logger.log(`OTP for ${phone}: ${code}`);
+    return Promise.resolve();
   }
 }
