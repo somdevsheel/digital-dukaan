@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Screen, Text, Button, Input, Card, Skeleton, useTheme } from "@platform/ui-native";
@@ -31,6 +31,16 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
     queryKey: ["addresses"],
     queryFn: () => apiFetch<Address[]>("/me/addresses"),
   });
+
+  // Without this, switching to Delivery leaves `addressId` null until the user happens to
+  // tap an address card themselves — the Place Order button just sits disabled with no
+  // indication why, which reads as "the button doesn't work". Picks the saved default
+  // address, falling back to the first one, the moment there's one to pick.
+  useEffect(() => {
+    if (fulfillmentType !== "DELIVERY" || addressId || !addresses || addresses.length === 0) return;
+    const defaultAddress = addresses.find((a) => a.isDefault) ?? addresses[0];
+    if (defaultAddress) setAddressId(defaultAddress.id);
+  }, [fulfillmentType, addresses, addressId]);
 
   const productByVariantId = new Map<string, { name: string; variantName: string }>();
   products?.forEach((p) => p.variants.forEach((v) => productByVariantId.set(v.id, { name: p.name, variantName: v.name })));
@@ -154,6 +164,11 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
               {fulfillmentType === "DELIVERY" && (
                 <View style={styles.gap8}>
                   <Text variant="subtitle">Delivery address</Text>
+                  {addresses && addresses.length === 0 && (
+                    <Text variant="caption" color="muted">
+                      Add a delivery address below to place this order.
+                    </Text>
+                  )}
                   {addresses?.map((addr) => (
                     <Pressable key={addr.id} onPress={() => setAddressId(addr.id)}>
                       <Card style={[styles.addressCard, { borderColor: addressId === addr.id ? theme.primary : theme.border }]}>

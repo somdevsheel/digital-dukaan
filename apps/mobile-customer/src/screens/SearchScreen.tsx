@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Screen, Text, Badge, Card, Skeleton, useTheme } from "@platform/ui-native";
 import { apiFetch } from "../lib/api";
@@ -93,24 +93,31 @@ export function SearchScreen({ route, navigation }: RootStackScreenProps<"Search
           renderItem={({ item }) => (
             <Pressable onPress={() => navigation.navigate("BusinessProfile", { slug: item.slug })}>
               <Card style={styles.card}>
-                <View style={styles.cardRow}>
-                  <Text variant="subtitle" numberOfLines={1} style={styles.cardTitle}>
-                    {item.name}
-                  </Text>
-                  {!item.isOpen && <Badge label="Closed" variant="secondary" />}
-                </View>
-                <Text variant="caption" color="muted">
-                  {item.businessTypeName}
-                </Text>
-                <View style={styles.metaRow}>
-                  <Text variant="caption">⭐ {item.ratingAvg > 0 ? item.ratingAvg.toFixed(1) : "New"}</Text>
-                  {item.distanceMeters !== null && (
+                <View style={styles.cardContent}>
+                  <View style={[styles.logo, { backgroundColor: theme.muted }]}>
+                    {item.logoUrl && <Image source={{ uri: item.logoUrl }} style={styles.logo} />}
+                  </View>
+                  <View style={styles.cardBody}>
+                    <View style={styles.cardRow}>
+                      <Text variant="subtitle" numberOfLines={1} style={styles.cardTitle}>
+                        {item.name}
+                      </Text>
+                      {!item.isOpen && <Badge label="Closed" variant="secondary" />}
+                    </View>
                     <Text variant="caption" color="muted">
-                      {formatDistance(item.distanceMeters)}
+                      {item.businessTypeName}
                     </Text>
-                  )}
-                  {item.deliveryEnabled && <Badge label="Delivery" variant="outline" />}
-                  {item.pickupEnabled && <Badge label="Pickup" variant="outline" />}
+                    <View style={styles.metaRow}>
+                      <Text variant="caption">⭐ {item.ratingAvg > 0 ? item.ratingAvg.toFixed(1) : "New"}</Text>
+                      {item.distanceMeters !== null && (
+                        <Text variant="caption" color="muted">
+                          {formatDistance(item.distanceMeters)}
+                        </Text>
+                      )}
+                      {item.deliveryEnabled && <Badge label="Delivery" variant="outline" />}
+                      {item.pickupEnabled && <Badge label="Pickup" variant="outline" />}
+                    </View>
+                  </View>
                 </View>
               </Card>
             </Pressable>
@@ -127,6 +134,9 @@ const styles = StyleSheet.create({
   filterList: { paddingHorizontal: 12, gap: 8 },
   list: { padding: 12, gap: 10 },
   card: { gap: 4 },
+  cardContent: { flexDirection: "row", gap: 12 },
+  logo: { width: 56, height: 56, borderRadius: 8 },
+  cardBody: { flex: 1, gap: 4 },
   cardRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   cardTitle: { flexShrink: 1 },
   metaRow: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 2 },
