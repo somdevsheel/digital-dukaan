@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Animated, Dimensions, FlatList, Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Animated, Dimensions, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { Ionicons } from "@expo/vector-icons";
@@ -117,10 +117,14 @@ export function HomeScreen({ navigation }: MainTabScreenProps<"HomeTab">) {
     <Screen>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
-          <Pressable onPress={() => setCategoriesMenuOpen(true)} hitSlop={10} style={styles.iconButton}>
+          <Pressable
+            onPress={() => setCategoriesMenuOpen(true)}
+            hitSlop={10}
+            style={({ pressed }) => [styles.iconButton, pressed && { backgroundColor: theme.muted }]}
+          >
             <Ionicons name="menu-outline" size={26} color={theme.foreground} />
           </Pressable>
-          <Pressable onPress={openCart} hitSlop={10} style={styles.iconButton}>
+          <Pressable onPress={openCart} hitSlop={10} style={({ pressed }) => [styles.iconButton, pressed && { backgroundColor: theme.muted }]}>
             <Ionicons name="cart-outline" size={24} color={theme.foreground} />
           </Pressable>
         </View>
@@ -170,7 +174,7 @@ export function HomeScreen({ navigation }: MainTabScreenProps<"HomeTab">) {
         ) : loadingNearbyProducts ? (
           <View style={styles.nearbyRow}>
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} height={100} width={112} />
+              <Skeleton key={i} height={168} width={128} />
             ))}
           </View>
         ) : nearbyProducts.length === 0 ? (
@@ -184,9 +188,13 @@ export function HomeScreen({ navigation }: MainTabScreenProps<"HomeTab">) {
             contentContainerStyle={styles.nearbyRow}
             renderItem={({ item }) => (
               <Pressable
+                style={({ pressed }) => pressed && styles.pressed}
                 onPress={() => navigation.navigate("ProductDetail", { businessId: item.businessId, productId: item.product.id })}
               >
                 <Card style={styles.productCard}>
+                  <View style={[styles.productImage, { backgroundColor: theme.muted }]}>
+                    {item.product.images[0] && <Image source={{ uri: item.product.images[0].url }} style={styles.productImage} />}
+                  </View>
                   <Text variant="caption" numberOfLines={2} style={styles.productName}>
                     {item.product.name}
                   </Text>
@@ -217,15 +225,18 @@ export function HomeScreen({ navigation }: MainTabScreenProps<"HomeTab">) {
               },
             ]}
           >
-            <Text variant="subtitle" style={styles.modalTitle}>
-              Categories
-            </Text>
+            <View style={styles.drawerHeader}>
+              <Text variant="subtitle">Categories</Text>
+              <Pressable onPress={closeCategoriesMenu} hitSlop={10} style={({ pressed }) => pressed && { opacity: 0.6 }}>
+                <Ionicons name="close" size={20} color={theme.mutedForeground} />
+              </Pressable>
+            </View>
             <FlatList
               data={businessTypes ?? []}
               keyExtractor={(type) => type.id}
               renderItem={({ item: type }) => (
                 <Pressable
-                  style={[styles.modalRow, { borderColor: theme.border }]}
+                  style={({ pressed }) => [styles.modalRow, { borderColor: theme.border }, pressed && { backgroundColor: theme.muted }]}
                   onPress={() => {
                     setCategoriesMenuOpen(false);
                     navigation.navigate("Search", { businessTypeId: type.id, ...searchParamsForCity() });
@@ -247,17 +258,19 @@ export function HomeScreen({ navigation }: MainTabScreenProps<"HomeTab">) {
 const styles = StyleSheet.create({
   content: { padding: 16, gap: 12 },
   topBar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  iconButton: { padding: 4 },
+  iconButton: { padding: 8, borderRadius: 20 },
   sectionTitle: { marginTop: 8 },
   categoryIcon: { fontSize: 24 },
   nearbyRow: { flexDirection: "row", gap: 10 },
-  productCard: { width: 112, gap: 2, padding: 8 },
+  pressed: { opacity: 0.6 },
+  productCard: { width: 128, gap: 2, padding: 8 },
+  productImage: { width: "100%", aspectRatio: 1, borderRadius: 8, marginBottom: 4 },
   productName: { fontWeight: "600" },
   productPrice: { marginTop: 2 },
   productShop: { marginTop: 2 },
   drawerContainer: { flex: 1, flexDirection: "row" },
   drawerBackdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.4)" },
   drawerSheet: { height: "100%", paddingHorizontal: 16 },
-  modalTitle: { marginBottom: 8 },
+  drawerHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
   modalRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth },
 });

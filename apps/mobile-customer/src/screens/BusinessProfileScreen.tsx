@@ -124,10 +124,15 @@ export function BusinessProfileScreen({ route, navigation }: RootStackScreenProp
               {tabs
                 .filter((t) => t.visible)
                 .map((t) => (
-                  <Pressable key={t.key} onPress={() => setTab(t.key)} style={styles.tabButton}>
+                  <Pressable
+                    key={t.key}
+                    onPress={() => setTab(t.key)}
+                    style={({ pressed }) => [styles.tabButton, pressed && styles.pressed]}
+                  >
                     <Text variant="body" color={tab === t.key ? "primary" : "muted"} style={tab === t.key ? styles.tabActive : undefined}>
                       {t.label}
                     </Text>
+                    {tab === t.key && <View style={[styles.tabIndicator, { backgroundColor: theme.primary }]} />}
                   </Pressable>
                 ))}
             </View>
@@ -135,7 +140,11 @@ export function BusinessProfileScreen({ route, navigation }: RootStackScreenProp
             {tab === "services" && (
               <View style={styles.sectionList}>
                 {services?.map((service) => (
-                  <Pressable key={service.id} onPress={() => navigation.navigate("ServiceEnquiry", { businessId: business.id, serviceId: service.id })}>
+                  <Pressable
+                    key={service.id}
+                    onPress={() => navigation.navigate("ServiceEnquiry", { businessId: business.id, serviceId: service.id })}
+                    style={({ pressed }) => pressed && styles.pressed}
+                  >
                     <Card style={styles.serviceCard}>
                       <View style={styles.serviceRow}>
                         <View style={[styles.serviceImage, { backgroundColor: theme.muted }]}>
@@ -189,7 +198,10 @@ export function BusinessProfileScreen({ route, navigation }: RootStackScreenProp
         renderItem={({ item }) => {
           const lowestPrice = item.variants.length ? Math.min(...item.variants.map((v) => v.pricePaise)) : item.basePricePaise;
           return (
-            <Pressable style={styles.gridItem} onPress={() => navigation.navigate("ProductDetail", { businessId: business.id, productId: item.id })}>
+            <Pressable
+              style={({ pressed }) => [styles.gridItem, pressed && styles.pressed]}
+              onPress={() => navigation.navigate("ProductDetail", { businessId: business.id, productId: item.id })}
+            >
               <Card>
                 <View style={[styles.productImage, { backgroundColor: theme.muted }]}>
                   {item.images[0] && <Image source={{ uri: item.images[0].url }} style={styles.productImage} />}
@@ -215,6 +227,7 @@ export function BusinessProfileScreen({ route, navigation }: RootStackScreenProp
               codEnabled: business.codEnabled,
             })
           }
+          style={({ pressed }) => [styles.cartBarWrap, pressed && { opacity: 0.9 }]}
         >
           <View style={[styles.cartBar, { backgroundColor: theme.primary }]}>
             <Text style={{ color: theme.primaryForeground, fontWeight: "600" }}>
@@ -235,9 +248,11 @@ const styles = StyleSheet.create({
   titleRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
   flexShrink: { flexShrink: 1 },
   metaRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  pressed: { opacity: 0.6 },
   tabRow: { flexDirection: "row", borderBottomWidth: StyleSheet.hairlineWidth, paddingHorizontal: 16 },
-  tabButton: { paddingVertical: 10, marginRight: 20 },
+  tabButton: { paddingVertical: 10, marginRight: 20, position: "relative" },
   tabActive: { fontWeight: "700" },
+  tabIndicator: { position: "absolute", left: 0, right: 0, bottom: -1, height: 2, borderRadius: 1 },
   sectionList: { padding: 16, gap: 10 },
   serviceCard: { gap: 4 },
   serviceRow: { flexDirection: "row", gap: 12 },
@@ -248,5 +263,12 @@ const styles = StyleSheet.create({
   gridItem: { flex: 1, marginBottom: 10 },
   productImage: { width: "100%", aspectRatio: 1, borderRadius: 8, marginBottom: 6 },
   productName: { minHeight: 32 },
+  cartBarWrap: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 4,
+  },
   cartBar: { padding: 14, alignItems: "center" },
 });

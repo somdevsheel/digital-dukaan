@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Ionicons } from "@expo/vector-icons";
 import { Screen, Text, Button, Input, Card, Skeleton, useTheme } from "@platform/ui-native";
 import { apiFetch, ApiError } from "../lib/api";
 import { formatRupees } from "../lib/format";
@@ -94,8 +95,14 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
       <FlatList
         data={cart.items}
         keyExtractor={(item) => item.id}
+        style={styles.flatList}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text color="muted">Your cart is empty.</Text>}
+        ListEmptyComponent={
+          <View style={styles.emptyState}>
+            <Ionicons name="cart-outline" size={48} color={theme.mutedForeground} />
+            <Text color="muted">Your cart is empty.</Text>
+          </View>
+        }
         renderItem={({ item }: { item: CartItem }) => {
           const info = productByVariantId.get(item.productVariantId);
           return (
@@ -113,7 +120,7 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
               </View>
               <View style={styles.qtyRow}>
                 <Pressable
-                  style={[styles.qtyButton, { borderColor: theme.border }]}
+                  style={({ pressed }) => [styles.qtyButton, { borderColor: theme.border, backgroundColor: pressed ? theme.muted : "transparent" }]}
                   onPress={() =>
                     item.quantity > 1
                       ? updateQuantity.mutate({ itemId: item.id, quantity: item.quantity - 1 })
@@ -124,12 +131,15 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
                 </Pressable>
                 <Text style={styles.qtyValue}>{item.quantity}</Text>
                 <Pressable
-                  style={[styles.qtyButton, { borderColor: theme.border }]}
+                  style={({ pressed }) => [styles.qtyButton, { borderColor: theme.border, backgroundColor: pressed ? theme.muted : "transparent" }]}
                   onPress={() => updateQuantity.mutate({ itemId: item.id, quantity: item.quantity + 1 })}
                 >
                   <Text>+</Text>
                 </Pressable>
-                <Pressable onPress={() => removeItem.mutate(item.id)} style={styles.removeButton}>
+                <Pressable
+                  onPress={() => removeItem.mutate(item.id)}
+                  style={({ pressed }) => [styles.removeButton, pressed && styles.pressed]}
+                >
                   <Text variant="caption" color="destructive">
                     Remove
                   </Text>
@@ -145,20 +155,23 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
               <View style={styles.chipRow}>
                 {(["DELIVERY", "PICKUP"] as const)
                   .filter((type) => (type === "DELIVERY" ? deliveryEnabled : pickupEnabled))
-                  .map((type) => (
-                  <Pressable
-                    key={type}
-                    onPress={() => setFulfillmentType(type)}
-                    style={[
-                      styles.chip,
-                      { borderColor: fulfillmentType === type ? theme.primary : theme.border, backgroundColor: fulfillmentType === type ? theme.primary : "transparent" },
-                    ]}
-                  >
-                    <Text style={{ color: fulfillmentType === type ? theme.primaryForeground : theme.foreground }}>
-                      {type === "DELIVERY" ? "Delivery" : "Pickup"}
-                    </Text>
-                  </Pressable>
-                ))}
+                  .map((type) => {
+                    const selected = fulfillmentType === type;
+                    return (
+                      <Pressable
+                        key={type}
+                        onPress={() => setFulfillmentType(type)}
+                        style={({ pressed }) => [
+                          styles.chip,
+                          { borderColor: selected ? theme.primary : theme.border, backgroundColor: selected ? theme.primary : pressed ? theme.muted : "transparent" },
+                        ]}
+                      >
+                        <Text style={{ color: selected ? theme.primaryForeground : theme.foreground }}>
+                          {type === "DELIVERY" ? "Delivery" : "Pickup"}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
               </View>
 
               {fulfillmentType === "DELIVERY" && (
@@ -170,7 +183,7 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
                     </Text>
                   )}
                   {addresses?.map((addr) => (
-                    <Pressable key={addr.id} onPress={() => setAddressId(addr.id)}>
+                    <Pressable key={addr.id} onPress={() => setAddressId(addr.id)} style={({ pressed }) => pressed && styles.pressed}>
                       <Card style={[styles.addressCard, { borderColor: addressId === addr.id ? theme.primary : theme.border }]}>
                         <Text variant="body">{addr.label}</Text>
                         <Text variant="caption" color="muted">
@@ -187,20 +200,23 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
               <View style={styles.chipRow}>
                 {(["ONLINE", "COD"] as const)
                   .filter((method) => method === "ONLINE" || codEnabled)
-                  .map((method) => (
-                  <Pressable
-                    key={method}
-                    onPress={() => setPaymentMethod(method)}
-                    style={[
-                      styles.chip,
-                      { borderColor: paymentMethod === method ? theme.primary : theme.border, backgroundColor: paymentMethod === method ? theme.primary : "transparent" },
-                    ]}
-                  >
-                    <Text style={{ color: paymentMethod === method ? theme.primaryForeground : theme.foreground }}>
-                      {method === "ONLINE" ? "Pay online" : "Cash on delivery"}
-                    </Text>
-                  </Pressable>
-                ))}
+                  .map((method) => {
+                    const selected = paymentMethod === method;
+                    return (
+                      <Pressable
+                        key={method}
+                        onPress={() => setPaymentMethod(method)}
+                        style={({ pressed }) => [
+                          styles.chip,
+                          { borderColor: selected ? theme.primary : theme.border, backgroundColor: selected ? theme.primary : pressed ? theme.muted : "transparent" },
+                        ]}
+                      >
+                        <Text style={{ color: selected ? theme.primaryForeground : theme.foreground }}>
+                          {method === "ONLINE" ? "Pay online" : "Cash on delivery"}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
               </View>
 
               <Input placeholder="Coupon code (optional)" value={couponCode} onChangeText={setCouponCode} autoCapitalize="characters" />
@@ -244,7 +260,10 @@ export function CartScreen({ route, navigation }: RootStackScreenProps<"Cart">) 
 
 const styles = StyleSheet.create({
   padding: { padding: 16, gap: 12 },
-  list: { padding: 16, gap: 10 },
+  flatList: { flex: 1 },
+  list: { padding: 16, gap: 10, flexGrow: 1 },
+  pressed: { opacity: 0.6 },
+  emptyState: { flex: 1, alignItems: "center", justifyContent: "center", gap: 10, paddingBottom: 60 },
   itemCard: { gap: 8 },
   itemRow: { flexDirection: "row", justifyContent: "space-between" },
   flexShrink: { flexShrink: 1 },
@@ -258,5 +277,13 @@ const styles = StyleSheet.create({
   chip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
   addressCard: { borderWidth: 1 },
   summaryRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 6 },
-  footer: { padding: 16, borderTopWidth: StyleSheet.hairlineWidth },
+  footer: {
+    padding: 16,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+  },
 });

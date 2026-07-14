@@ -62,7 +62,7 @@ export function SearchScreen({ route, navigation }: RootStackScreenProps<"Search
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filterList}
           renderItem={({ item }) => (
-            <Pressable onPress={() => toggle(item.key)}>
+            <Pressable onPress={() => toggle(item.key)} style={({ pressed }) => pressed && styles.pressed}>
               <Badge label={item.label} variant={active.has(item.key) ? "default" : "outline"} />
             </Pressable>
           )}
@@ -91,7 +91,10 @@ export function SearchScreen({ route, navigation }: RootStackScreenProps<"Search
           }
           ListFooterComponent={isFetchingNextPage ? <Skeleton height={76} /> : null}
           renderItem={({ item }) => (
-            <Pressable onPress={() => navigation.navigate("BusinessProfile", { slug: item.slug })}>
+            <Pressable
+              onPress={() => navigation.navigate("BusinessProfile", { slug: item.slug })}
+              style={({ pressed }) => pressed && styles.pressed}
+            >
               <Card style={styles.card}>
                 <View style={styles.cardContent}>
                   <View style={[styles.logo, { backgroundColor: theme.muted }]}>
@@ -133,6 +136,7 @@ const styles = StyleSheet.create({
   filterRow: { paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth },
   filterList: { paddingHorizontal: 12, gap: 8 },
   list: { padding: 12, gap: 10 },
+  pressed: { opacity: 0.6 },
   card: { gap: 4 },
   cardContent: { flexDirection: "row", gap: 12 },
   logo: { width: 56, height: 56, borderRadius: 8 },
