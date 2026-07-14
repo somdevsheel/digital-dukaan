@@ -1,0 +1,44 @@
+{
+  "name": "@app/mobile-merchant",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Merchant native app — order queue, catalog, coupons, staff, sales analytics.",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "build": "eas build",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "expo": "~52.0.0",
+    "@babel/runtime": "^7.26.0",
+    "@expo/vector-icons": "^14.0.4",
+    "expo-asset": "~11.0.5",
+    "expo-constants": "~17.0.3",
+    "expo-status-bar": "~2.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-screens": "~4.4.0",
+    "react-native-safe-area-context": "4.12.0",
+    "@react-navigation/native": "^7.0.0",
+    "@react-navigation/native-stack": "^7.1.0",
+    "@react-navigation/bottom-tabs": "^7.1.0",
+    "@tanstack/react-query": "^5.62.0",
+    "react-hook-form": "^7.54.0",
+    "zod": "^3.24.0",
+    "expo-secure-store": "~14.0.0",
+    "@platform/ui-native": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/react": "~18.3.12",
+    "babel-preset-expo": "~12.0.0",
+    "jest": "^29.7.0",
+    "jest-expo": "~52.0.0",
+    "@platform/config": "workspace:*"
+  }
+}

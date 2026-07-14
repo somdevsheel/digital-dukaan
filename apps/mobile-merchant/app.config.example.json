@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Marketplace — Merchant",
+    "slug": "marketplace-merchant",
+    "scheme": "marketplace-merchant",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "extra": {
+      "apiUrl": "http://localhost:4000/api/v1"
+    }
+  }
+}
